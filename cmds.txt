@@ -9,3 +9,7 @@ ansible all -i inventory -m ping
 ansible all -m ping
 
 ansible all -m gather_facts --limit ubuntu@43.204.35.134
+
+ansible all -m apt -a update_cache=true --become --ask-become-pass
+
+cat /var/log/apt/history.log
