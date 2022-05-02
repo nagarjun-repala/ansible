@@ -1,0 +1,11 @@
+eval $(ssh-agent)
+ps aux | grep 9654 
+ssh-add
+
+zsh file: alias ssha='eval $(ssh-agent) && ssh-add'
+
+ansible all -i inventory -m ping
+
+ansible all -m ping
+
+ansible all -m gather_facts --limit ubuntu@43.204.35.134
