@@ -13,3 +13,5 @@ ansible all -m gather_facts --limit ubuntu@43.204.35.134
 ansible all -m apt -a update_cache=true --become --ask-become-pass
 
 cat /var/log/apt/history.log
+
+ssh-copy-id -i <privatefileonhost> centos@13.232.57.246
