@@ -12,17 +12,17 @@
         state: latest
       when: ansible_distribution in ["CentOS"]  
 
-    - name: install updates (CentOS)
+    - name: update repo cache (CentOS)
       dnf:
-        update_only: yes
         update_cache: yes
+      changed_when: false
       when: ansible_distribution in ["CentOS"]
 
-    - name: install updates (Ubuntu)
+    - name: update repo cache (Ubuntu)
       tags: always
       apt:
-        upgrade: dist
         update_cache: yes
+      changed_when: false
       when: ansible_distribution in ["Ubuntu", "Debian"]
 
 - hosts: web_servers
@@ -48,6 +48,11 @@
         state: latest
         update_cache: yes
       when: ansible_distribution in ["Debian", "Ubuntu"]
+
+    # - name: change email address for admin
+    #   tags: apache2, Ubuntu
+    #   lineinfile: 
+
     - name: copy default html file fo site
       tags: apache, apache2
       copy:
@@ -56,6 +61,14 @@
         owner: root
         group: root
         mode: 0644
+
+    - name: start apache2
+      tags: apache, Ubuntu
+      service:
+        name: apache2
+        state: started
+        enabled: yes
+      when: ansible_distribution in ["Ubuntu"]          
 
 
 - hosts: db_servers
@@ -75,6 +88,8 @@
         state: latest
       when: ansible_distribution in ["Ubuntu"]
 
+    
+
 - hosts: file_servers
   become: true
   tasks:
@@ -83,4 +98,32 @@
       tags: samba
       package:
         name: samba
+
+
+- hosts: all
+  become: true
+  tasks:
+
+    - name: add ssh key for simone
+      tags: always
+      authorized_key:
+        user: simone
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOr++tto9s3z7UO/oKssgwhMM6hM5MujrHw0hZHr8WAc nagarjun-default"
+
+- hosts: workstations
+  become: true
+  tasks:
+
+    - name: install unzip
+      package:
+        name: unzip
+
+    - name: install terraform
+      unarchive:
+        src: https://releases.hashicorp.com/terraform/1.1.9/terraform_1.1.9_linux_amd64.zip
+        dest: /usr/local/bin
+        remote_src: yes
+        mode: 0755
+        owner: root
+        group: root
 

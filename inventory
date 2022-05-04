@@ -1,8 +1,11 @@
 [web_servers]
-ubuntu@13.234.213.179
+65.0.81.218
 
 [db_servers]
-ubuntu@13.234.213.179
+65.0.81.218
 
 [file_servers]
-ubuntu@13.234.213.179
+65.0.81.218
+
+[workstations]
+65.0.81.218

@@ -1,0 +1,54 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+    - name: install dnf
+      tags: always
+      yum:
+        name:
+          - dnf
+        state: latest
+      when: ansible_distribution in ["CentOS"]  
+
+    - name: install updates (CentOS)
+      dnf:
+        update_only: yes
+        update_cache: yes
+      when: ansible_distribution in ["CentOS"]
+
+    - name: install updates (Ubuntu)
+      tags: always
+      apt:
+        upgrade: dist
+        update_cache: yes
+      when: ansible_distribution in ["Ubuntu", "Debian"]
+
+- hosts: all
+  become: true
+  tasks:
+    
+    - name: create simone user
+      tags: always
+      user:
+        name: simone
+        group: root
+    
+    - name: add ssh key for simone
+      tags: always
+      authorized_key:
+        user: simone
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOr++tto9s3z7UO/oKssgwhMM6hM5MujrHw0hZHr8WAc nagarjun-default"
+
+    - name: add sudoers file for simone
+      tags: always
+      copy:
+        src: sudoer_simone
+        dest: /etc/sudoers.d/simone
+        owner: root
+        group: root
+        mode: 0440
+
+
+
