@@ -1,8 +1,8 @@
 [web_servers]
-ubuntu@35.154.24.37
+ubuntu@13.234.213.179
 
 [db_servers]
-centos@65.2.38.144
+ubuntu@13.234.213.179
 
 [file_servers]
-ubuntu@35.154.24.37
+ubuntu@13.234.213.179
