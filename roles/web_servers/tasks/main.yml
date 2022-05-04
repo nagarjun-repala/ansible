@@ -1,22 +1,10 @@
-- name: install apache and php package for CentOS
-  tags: apache, apache2, CentOS
-  dnf:
+- name: install apache and php packages
+  tags: apache, httpd, php
+  package:
     name:
-      - httpd
-      - php
+      - "{{ apache_package_name }}"
+      - "{{ php_package_name }}"
     state: latest
-    update_cache: yes
-  when: ansible_distribution in ["CentOS"]  
-
-- name: install apache2 and php package for Ubuntu
-  tags: apache, apache2    
-  apt:
-    name: 
-      - apache2
-      - libapache2-mod-php
-    state: latest
-    update_cache: yes
-  when: ansible_distribution in ["Debian", "Ubuntu"]
   
 - name: copy default html file fo site
   tags: apache, apache2
@@ -30,7 +18,6 @@
 - name: start apache2
   tags: apache, Ubuntu
   service:
-    name: apache2
+    name: "{{ apache_service }}"
     state: started
     enabled: yes
-  when: ansible_distribution in ["Ubuntu"] 
